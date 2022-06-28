@@ -5,9 +5,14 @@
 package it.polito.tdp.yelp;
 
 import java.net.URL;
+import java.time.Year;
 import java.util.ResourceBundle;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
 import it.polito.tdp.yelp.model.Model;
+import it.polito.tdp.yelp.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,7 +43,7 @@ public class FXMLController {
     private TextField txtX2; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbAnno"
-    private ComboBox<?> cmbAnno; // Value injected by FXMLLoader
+    private ComboBox<Year> cmbAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
@@ -54,7 +59,11 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	int N = Integer.parseInt(this.txtN.getText());
+    	int anno = this.cmbAnno.getValue().getValue();
+    	Graph<User, DefaultWeightedEdge> grafo = this.model.creaGrafo(N, anno);
+    	txtResult.setText("N. Vertici : " + grafo.vertexSet().size());
+    	txtResult.appendText("\nN. archi : " + grafo.edgeSet().size());
     }
 
     @FXML
@@ -80,6 +89,10 @@ public class FXMLController {
         assert txtX1 != null : "fx:id=\"txtX1\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Scene.fxml'.";
 
+        this.cmbAnno.getItems().clear();
+        for(int i = 2005; i < 2014; i ++) {
+        	this.cmbAnno.getItems().add(Year.of(i));
+        }
     }
     
     public void setModel(Model model) {
